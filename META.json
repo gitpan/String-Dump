@@ -16,7 +16,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::More" : "0.4"
+            "Test::More" : "0.82"
          }
       },
       "configure" : {
@@ -34,7 +34,7 @@
    "provides" : {
       "String::Dump" : {
          "file" : "lib/String/Dump.pm",
-         "version" : "0.01"
+         "version" : "0.02"
       }
    },
    "release_status" : "stable",
@@ -50,5 +50,5 @@
          "url" : "git://github.com/patch/string-dump-pm5.git"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }
