@@ -16,7 +16,7 @@ name: String-Dump
 provides:
   String::Dump:
     file: lib/String/Dump.pm
-    version: 0.02
+    version: 0.03
 requires:
   parent: 0
   perl: v5.6.0
@@ -25,4 +25,4 @@ resources:
   homepage: https://github.com/patch/string-dump-pm5
   license: http://dev.perl.org/licenses/
   repository: git://github.com/patch/string-dump-pm5.git
-version: 0.02
+version: 0.03
