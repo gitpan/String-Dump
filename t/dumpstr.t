@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 16;
+use Test::Warn;
 use String::Dump;
 
 use utf8;
@@ -24,6 +25,30 @@ is(
     . ' LATIN SMALL LETTER S, EXCLAMATION MARK, SPACE, WHITE SMILING FACE',
     'names mode'
 );
+
+SKIP: {
+    # TODO: use codepoints that will not be supported anytime soon
+    skip 'Unicode 6.0 supported in Perl 5.14', 2 if $] >= 5.014;
+
+    is dumpstr(names => '💀🎅'),  '?, ?', 'unknown Unicode names';
+    is(
+        dumpstr(names => 'I❤🐙'),
+        'LATIN CAPITAL LETTER I, HEAVY BLACK HEART, ?',
+        'unknown Unicode names'
+    );
+}
+
+warning_is { dumpstr() } {
+    carped => 'dumpstr() expects either one or two arguments'
+}, 'too few args';
+
+warning_is { dumpstr('hex', 'a', 1) } {
+    carped => 'dumpstr() expects either one or two arguments'
+}, 'too many args';
+
+warning_is { dumpstr(sugar => 'a') } {
+    carped => "invalid dumpstr() mode 'sugar'"
+}, 'invalid mode';
 
 no utf8;
 

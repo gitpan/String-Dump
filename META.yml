@@ -4,6 +4,7 @@ author:
   - 'Nick Patch <patch@cpan.org>'
 build_requires:
   Test::More: 0.82
+  Test::Warn: 0
 configure_requires:
   Module::Build: 0.36
 dynamic_config: 1
@@ -16,7 +17,7 @@ name: String-Dump
 provides:
   String::Dump:
     file: lib/String/Dump.pm
-    version: 0.03
+    version: 0.04
 requires:
   parent: 0
   perl: v5.6.0
@@ -25,4 +26,4 @@ resources:
   homepage: https://github.com/patch/string-dump-pm5
   license: http://dev.perl.org/licenses/
   repository: git://github.com/patch/string-dump-pm5.git
-version: 0.03
+version: 0.04

@@ -3,17 +3,18 @@ package String::Dump;
 use 5.006;
 use strict;
 use warnings;
-use charnames qw( :full );
 use parent 'Exporter';
+use charnames qw( :full );
+use Carp;
 
-our $VERSION = '0.03';
-our @EXPORT  = qw( dumpstr dump_string );
-# TODO: remove dump_string from @EXPORT
-#our @EXPORT_OK = qw( dump_string );
+our $VERSION   = '0.04';
+our @EXPORT    = qw( dumpstr );
+our @EXPORT_OK = qw( dump_string );
 
 *dump_string = \&dumpstr;
 
 use constant DEFAULT_MODE => 'hex';
+use constant UNKNOWN_NAME => '?';
 
 my %delim_for = (
     hex   => ' ',
@@ -24,11 +25,11 @@ my %delim_for = (
 );
 
 my %sub_for = (
-    hex   => sub { map { sprintf '%X',      ord } @_ },
-    dec   => sub { map {                    ord } @_ },
-    oct   => sub { map { sprintf '%o',      ord } @_ },
-    bin   => sub { map { sprintf '%b',      ord } @_ },
-    names => sub { map { charnames::viacode ord } @_ },
+    hex   => sub { map { sprintf '%X', ord } @_ },
+    dec   => sub { map {               ord } @_ },
+    oct   => sub { map { sprintf '%o', ord } @_ },
+    bin   => sub { map { sprintf '%b', ord } @_ },
+    names => sub { map { charnames::viacode(ord) || UNKNOWN_NAME } @_ },
 );
 
 sub dumpstr {
@@ -37,8 +38,17 @@ sub dumpstr {
     if (@_ == 1) {
         ($mode, $string) = (DEFAULT_MODE, @_);
     }
-    else {
+    elsif (@_ == 2) {
         ($mode, $string) = @_;
+
+        if ( !exists $sub_for{$mode} ) {
+            carp "invalid dumpstr() mode '$mode'";
+            return;
+        }
+    }
+    else {
+        carp 'dumpstr() expects either one or two arguments';
+        return;
     }
 
     return unless defined $string;
@@ -58,7 +68,7 @@ String::Dump - Dump strings of characters or bytes for printing and debugging
 
 =head1 VERSION
 
-This document describes String::Dump version 0.03.
+This document describes String::Dump version 0.04.
 
 =head1 SYNOPSIS
 
