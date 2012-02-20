@@ -36,7 +36,7 @@
    "provides" : {
       "String::Dump" : {
          "file" : "lib/String/Dump.pm",
-         "version" : "0.05"
+         "version" : "0.06"
       }
    },
    "release_status" : "stable",
@@ -52,5 +52,5 @@
          "url" : "git://github.com/patch/string-dump-pm5.git"
       }
    },
-   "version" : "0.05"
+   "version" : "0.06"
 }
