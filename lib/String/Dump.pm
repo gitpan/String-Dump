@@ -7,27 +7,9 @@ use parent 'Exporter';
 use charnames qw( :full );
 use Carp;
 
-our $VERSION     = '0.06';
+our $VERSION     = '0.07';
 our @EXPORT      = qw( dump_hex dump_dec dump_oct dump_bin dump_names );
 our %EXPORT_TAGS = ( all => \@EXPORT );
-
-use constant UNKNOWN_NAME => '?';
-
-my %delim_for = (
-    hex   => ' ',
-    dec   => ' ',
-    oct   => ' ',
-    bin   => ' ',
-    names => ', ',
-);
-
-my %sub_for = (
-    hex   => sub { map { sprintf '%X', ord } @_ },
-    dec   => sub { map {               ord } @_ },
-    oct   => sub { map { sprintf '%o', ord } @_ },
-    bin   => sub { map { sprintf '%b', ord } @_ },
-    names => sub { map { charnames::viacode(ord) || UNKNOWN_NAME } @_ },
-);
 
 # TODO: remove this after a while
 sub import {
@@ -39,23 +21,41 @@ sub import {
     $class->SUPER::import(@symbols);
 }
 
-sub dump_hex   { _dumpstr('hex',   @_) }
-sub dump_dec   { _dumpstr('dec',   @_) }
-sub dump_oct   { _dumpstr('oct',   @_) }
-sub dump_bin   { _dumpstr('bin',   @_) }
-sub dump_names { _dumpstr('names', @_) }
+sub dump_hex {
+    my ($str) = @_;
+    carp('dump_hex() expects one argument') && return if @_ != 1;
+    return unless defined $str;
+    return sprintf '%*vX', ' ', $str;
+}
 
-sub _dumpstr {
-    my ($mode, $string) = @_;
+sub dump_dec {
+    my ($str) = @_;
+    carp('dump_dec() expects one argument') && return if @_ != 1;
+    return unless defined $str;
+    return sprintf '%*vd', ' ', $str;
+}
 
-    if (@_ != 2) {
-        carp "dump_$mode() expects one argument";
-        return;
-    }
+sub dump_oct {
+    my ($str) = @_;
+    carp('dump_oct() expects one argument') && return if @_ != 1;
+    return unless defined $str;
+    return sprintf '%*vo', ' ', $str;
+}
 
-    return unless defined $string;
+sub dump_bin {
+    my ($str) = @_;
+    carp('dump_bin() expects one argument') && return if @_ != 1;
+    return unless defined $str;
+    return sprintf '%*vb', ' ', $str;
+}
 
-    return join $delim_for{$mode}, $sub_for{$mode}->(split '', $string);
+sub dump_names {
+    my ($str) = @_;
+    carp('dump_names() expects one argument') && return if @_ != 1;
+    return unless defined $str;
+    return join ', ',
+           map { charnames::viacode(ord) || '?' }
+           split '', $str;
 }
 
 1;
@@ -66,31 +66,31 @@ __END__
 
 =head1 NAME
 
-String::Dump - Dump strings of characters or bytes for printing and debugging
+String::Dump - Dump strings of characters (or bytes) for printing and debugging
 
 =head1 VERSION
 
-This document describes String::Dump version 0.06.
+This document describes String::Dump version 0.07.
 
 =head1 SYNOPSIS
 
     use String::Dump qw( dump_hex dump_oct );
 
-    say 'hex: ', dump_hex($string);  # hex mode
-    say 'oct: ', dump_oct($string);  # octal mode
+    say 'hex: ', dump_hex($string);
+    say 'oct: ', dump_oct($string);
 
 =head1 DESCRIPTION
 
 When debugging or reviewing strings containing non-ASCII or non-printing
 characters, String::Dump is your friend.  It provides simple functions to
-return a dump of the characters or bytes of your string in several different
-formats, such as hex, octal, decimal, Unicode names, and more.
+return a dump of the characters or bytes (octets) of your string in several
+different formats, such as hex, octal, decimal, Unicode names, and more.
 
 An OO interface is forthcoming with additional options and the ability to
 reuse them among multiple calls.  Some benefits will include the ability to
-set the delimiter between characters, set padding for the characters, and
-force a string to be treated as a string of characters or a series of bytes.
-Don’t worry, the standard functions will remain simple.
+set the delimiter between character dumps, set padding for the characters,
+or only dump non-ASCII characters.  Don’t worry, the standard functions will
+remain simple.
 
 Check out L<String::Dump::Debugging> for tips on debugging Unicode and encoded
 strings with this module.  Also check out the bundled command-line tool
@@ -174,13 +174,6 @@ what you really want!
 
 The output in the examples above has been manually split into multiple lines
 for the layout of this document.
-
-=head1 CONTRIBUTIONS
-
-This is an early release of String::Dump.  Feedback is appreciated!  To give
-suggestions or report an issue, contact L<mailto:patch@cpan.org> or open an
-issue at L<https://github.com/patch/string-dump-pm5/issues>.  Pull requests
-are welcome at L<https://github.com/patch/string-dump-pm5>.
 
 =head1 SEE ALSO
 
