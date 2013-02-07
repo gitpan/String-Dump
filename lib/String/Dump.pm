@@ -7,16 +7,9 @@ use parent 'Exporter';
 use charnames qw( :full );
 use Carp;
 
-our $VERSION = '0.08';
-our @EXPORT_OK = qw(
-    dump_hex
-    dump_dec
-    dump_oct
-    dump_bin
-    dump_names
-    dump_codes
-);
-our %EXPORT_TAGS = (all => \@EXPORT_OK);
+our $VERSION = '0.09';
+our @EXPORT  = qw( dump_hex dump_dec dump_oct dump_bin dump_names dump_codes );
+our %EXPORT_TAGS = (all => \@EXPORT);
 
 sub dump_hex {
     my ($str) = @_;
@@ -74,7 +67,7 @@ String::Dump - Dump strings of characters (or bytes) for printing and debugging
 
 =head1 VERSION
 
-This document describes String::Dump version 0.08.
+This document describes String::Dump version 0.09.
 
 =head1 SYNOPSIS
 
@@ -97,10 +90,9 @@ L<String::Dump::Debugging>.
 =head1 FUNCTIONS
 
 These functions all accept a single argument: the string to dump, which may
-either be a Unicode string or a byte string.  Each function has to be explicitly
-exported or they can all be exported with the C<:all> tag.
-
-    use String::Dump qw( :all );
+either be a Unicode string or a byte string.  All functions are exported by
+default unless specific ones are requested.  The C<:all> tag may be used to
+explicitly export all functions.
 
 =head2 dump_hex($string)
 
@@ -201,7 +193,7 @@ Nick Patch <patch@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-© 2011–2012 Nick Patch
+© 2011–2013 Nick Patch
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
